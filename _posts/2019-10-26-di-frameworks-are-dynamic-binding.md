@@ -30,13 +30,13 @@ is defined and see that `greeting` has been assigned the value `"Hello!"`.
 * In a dynamically scoped language we will look into the environment in which `printGreeting`
 is executing and see that `greeting` has been assigned the value `"Fuck off!"`.
 
-If dynamic scoping seems very weird to you, it is likely partly because you've never seen it before,
+If dynamic scoping seems very weird to you, it likely is partly because you've never seen it before,
 and partly because it actually is very weird. Almost all modern programming languages are lexically
-scoped. Dynamic scoping makes it hard to determine what our program will actually do without executing it,
+scoped. Dynamic scoping makes it hard to figure what our program actually does, without executing it,
 and that's not a quality we want our programs to exhibit.
 
 Dynamic scoping might seem dubious at first glance, but I'm going to argue that one of the biggest
-advances in software engineering these past 15 years essentially boils down emulating dynamic scoping
+advances in software engineering these past 20 years essentially boils down emulating dynamic scoping
 in lexically scoped languages. I'm talking about dependency injection.
 
 ## Dependency injection
@@ -154,8 +154,8 @@ public static void acceptOrder(Env env, Customer customer, List<OrderItem> items
 
 Now we only had to construct objects for those services that we want to change
 when testing. In this small example it didn't have much effect on the code size
-but in a large project it could remove a lot of useless objects. We could also put
-regular function references instead of service objects into the `Env` if we'd prefer.
+but in a large project it could remove a lot of useless objects. If we preferred to, we could also put
+regular function references in the `Env`, instead of service objects.
 Finally, we could also remove the `Env` entirely and pass around the services one by one, but
 this quickly leads to an unmaintainable mess.
 
