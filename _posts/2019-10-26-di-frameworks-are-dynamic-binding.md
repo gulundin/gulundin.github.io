@@ -169,7 +169,7 @@ the `Env` around: this is called using a reader monad.
 ## Explicit dynamic scoping
 Some lexically scoped programming languages, like Perl and most Lisps, allow us to explicitly
 declare that a certain name should be dynamically scoped. Let's explore how that would be done
-in Clojure.
+in Clojure[^redef].
 
 First let's define a dangerous function that we don't want called in test:
 {% highlight clojure %}
@@ -217,6 +217,10 @@ It's a shame that it isn't available in more languages.
     There are reasons other than testability for wanting to swap out one implementation
     for another. However, testability is the most common reason and the solutions are the
     same regardless of our reasons.
+
+[^redef]:
+    Clojure also has `with-redefs` which lets you temporarily swap out lexically scoped functions.
+    However, this is not thread-safe.
 
 [^gotcha]: 
     There is a minor gotcha with threading though. Before spawning a new thread
