@@ -56,7 +56,7 @@ public static void acceptOrder(Customer customer, List<OrderItem> items) {
 }
 {% endhighlight %}
 
-Our `acceptOrder` function above has some problems when it comes to testability[^testability].
+Our `acceptOrder` function above has some problems when it comes to testability.
 We simply cannot call it without incurring severe side effects on the outside world;
 charging money and sending mails are not stuff we want to do in test.
 
@@ -99,7 +99,7 @@ this is mostly Java's fault and not something inherently wrong with objects
 and dependency injection. 
 
 Second, we can now pass in different implementations 
-of our dependencies when executing in test. This is very good, but let me rephrase
+of our dependencies when executing in test[^testability]. This is very good, but let me rephrase
 that in more general terms: the value of certain names are now dependent on the environment
 in which we are executing. This should sound very familiar,
 dependency injection is just dynamic binding in disguise.
@@ -216,7 +216,7 @@ It's a shame that it isn't available in more languages.
 [^testability]:
     There are reasons other than testability for wanting to swap out one implementation
     for another. However, testability is the most common reason and the solutions are the
-    same regardless of the reason why you want to swap out an implementation.
+    same regardless of our reasons.
 
 [^gotcha]: 
     There is a minor gotcha with threading though. Before spawning a new thread
