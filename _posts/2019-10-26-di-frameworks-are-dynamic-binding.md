@@ -218,7 +218,7 @@ It's a shame that it isn't available in more languages.
     for another. However, testability is the most common reason and the solutions are the
     same regardless of our reasons.
 
-[^rio]
+[^rio]:
     The particular style where you're using a `Reader` to look up an environment containing IO performing
     services is called the RIO monad pattern.
 
