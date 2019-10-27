@@ -2,7 +2,7 @@
 layout: post
 title: Dependency injection is dynamic scoping in disguise
 ---
-Once upon time programming language researchers used to debate whether programming
+Once upon time programmer used to debate whether programming
 languages should be lexically or dynamically scoped. That might sound like gibberish to you
 but I think there's an important lesson about modern software engineering
 to be learnt here, so allow me to explain.
@@ -106,8 +106,8 @@ dependency injection is just dynamic binding in disguise.
 
 ## Dependency injection is not trivial
 The problem with objects is that they have to be constructed somewhere. To
-build an `OrderService` we also need to build a `StockService`, and whatever
-that `StockService` depend upon and so forth. This can easily turn into a huge
+build an `OrderService` we also need to build a `SupplyService`, and whatever
+that `SupplyService` depend upon and so forth. This can easily turn into a huge
 hassle where shared dependencies lead to code duplication and just thinking of
 having to add a new dependency to an object makes you groan in annoyance.
 
