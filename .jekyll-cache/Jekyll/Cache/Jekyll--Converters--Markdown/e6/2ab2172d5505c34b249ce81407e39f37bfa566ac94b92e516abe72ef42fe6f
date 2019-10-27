@@ -1,4 +1,4 @@
-I"DO<p>Once upon time programming language researchers used to debate whether programming
+I"�Q<p>Once upon time programming language researchers used to debate whether programming
 languages should be lexically or dynamically scoped. That might sound like gibberish to you
 but I think there’s an important lesson about modern software engineering
 to be learnt here, so allow me to explain.</p>
@@ -27,13 +27,13 @@ is defined and see that <code class="highlighter-rouge">greeting</code> has been
 is executing and see that <code class="highlighter-rouge">greeting</code> has been assigned the value <code class="highlighter-rouge">"Fuck off!"</code>.</li>
 </ul>
 
-<p>If dynamic scoping seems very weird to you, it is likely partly because you’ve never seen it before,
+<p>If dynamic scoping seems very weird to you, it likely is partly because you’ve never seen it before,
 and partly because it actually is very weird. Almost all modern programming languages are lexically
-scoped. Dynamic scoping makes it hard to determine what our program will actually do without executing it,
+scoped. Dynamic scoping makes it hard to figure what our program actually does, without executing it,
 and that’s not a quality we want our programs to exhibit.</p>
 
 <p>Dynamic scoping might seem dubious at first glance, but I’m going to argue that one of the biggest
-advances in software engineering these past 15 years essentially boils down emulating dynamic scoping
+advances in software engineering these past 20 years<sup id="fnref:debatable"><a href="#fn:debatable" class="footnote">1</a></sup> essentially boils down emulating dynamic scoping
 in lexically scoped languages. I’m talking about dependency injection.</p>
 
 <h2 id="dependency-injection">Dependency injection</h2>
@@ -44,7 +44,7 @@ in lexically scoped languages. I’m talking about dependency injection.</p>
 <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">acceptOrder</span><span class="o">(</span><span class="nc">Customer</span> <span class="n">customer</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">OrderItem</span><span class="o">&gt;</span> <span class="n">items</span><span class="o">)</span> <span class="o">{</span>
     <span class="kt">var</span> <span class="n">totalCost</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
     <span class="k">for</span> <span class="o">(</span><span class="kt">var</span> <span class="n">item</span> <span class="o">:</span> <span class="n">items</span><span class="o">)</span> <span class="o">{</span>
-        <span class="nc">Stock</span><span class="o">.</span><span class="na">reduceSupply</span><span class="o">(</span><span class="n">item</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">amount</span><span class="o">);</span>
+        <span class="nc">Supply</span><span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="n">item</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">amount</span><span class="o">);</span>
         <span class="n">totalCost</span> <span class="o">+=</span> <span class="n">item</span><span class="o">.</span><span class="na">cost</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="na">amount</span><span class="o">;</span>
     <span class="o">}</span>
     <span class="nc">Bank</span><span class="o">.</span><span class="na">chargeMoney</span><span class="o">(</span><span class="n">customer</span><span class="o">,</span> <span class="n">totalCost</span><span class="o">);</span>
@@ -61,16 +61,16 @@ introducing objects and accepting our dependencies in the constructor:</p>
 
 <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">OrderService</span> <span class="o">{</span>
 
-    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">StockService</span> <span class="n">stock</span><span class="o">;</span>
+    <span class="kd">private</span> <span class="kd">final</span> <span class="nc">SupplyService</span> <span class="n">supply</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kd">final</span> <span class="nc">BankService</span> <span class="n">bank</span><span class="o">;</span>
     <span class="kd">private</span> <span class="kd">final</span> <span class="nc">MailService</span> <span class="n">mailer</span><span class="o">;</span>
 
     <span class="kd">public</span> <span class="nf">OrderService</span><span class="o">(</span>
-        <span class="nc">StockService</span> <span class="n">stock</span><span class="o">,</span>
+        <span class="nc">SupplyService</span> <span class="n">supply</span><span class="o">,</span>
         <span class="nc">BankService</span> <span class="n">bank</span><span class="o">,</span>
         <span class="nc">MailService</span> <span class="n">mailer</span>
     <span class="o">)</span> <span class="o">{</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">stock</span> <span class="o">=</span> <span class="n">stock</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">supply</span> <span class="o">=</span> <span class="n">supply</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">bank</span> <span class="o">=</span> <span class="n">bank</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">mailer</span> <span class="o">=</span> <span class="n">mailer</span><span class="o">;</span>
     <span class="o">}</span>
@@ -78,7 +78,7 @@ introducing objects and accepting our dependencies in the constructor:</p>
     <span class="kd">public</span> <span class="kt">void</span> <span class="nf">acceptOrder</span><span class="o">(</span><span class="nc">Customer</span> <span class="n">customer</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">OrderItem</span><span class="o">&gt;</span> <span class="n">items</span><span class="o">)</span> <span class="o">{</span>
         <span class="kt">var</span> <span class="n">totalCost</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
         <span class="k">for</span> <span class="o">(</span><span class="kt">var</span> <span class="n">item</span> <span class="o">:</span> <span class="n">items</span><span class="o">)</span> <span class="o">{</span>
-            <span class="n">stock</span><span class="o">.</span><span class="na">reduceSupply</span><span class="o">(</span><span class="n">item</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">amount</span><span class="o">);</span>
+            <span class="n">supply</span><span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="n">item</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">amount</span><span class="o">);</span>
             <span class="n">totalCost</span> <span class="o">+=</span> <span class="n">item</span><span class="o">.</span><span class="na">cost</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="na">amount</span><span class="o">;</span>
         <span class="o">}</span>
         <span class="n">bank</span><span class="o">.</span><span class="na">chargeMoney</span><span class="o">(</span><span class="n">customer</span><span class="o">,</span> <span class="n">totalCost</span><span class="o">);</span>
@@ -95,8 +95,8 @@ and dependency injection.</p>
 
 <p>Second, we can now pass in different implementations 
 of our dependencies when executing in test. This is very good, but let me rephrase
-that in more general terms: we can now look into the environment in which we are
-executing to determine the value of names. This should sound very familiar,
+that in more general terms: the value of certain names are now dependent on the environment
+in which we are executing. This should sound very familiar,
 dependency injection is just dynamic binding in disguise.</p>
 
 <h2 id="dependency-injection-is-not-trivial">Dependency injection is not trivial</h2>
@@ -117,16 +117,16 @@ injection frameworks that construct objects using reflection, like Spring or Gui
 container for all things we want to change when testing:</p>
 
 <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="nc">Env</span> <span class="o">{</span>
-    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">Stock</span> <span class="n">stock</span><span class="o">;</span>
-    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">Bank</span> <span class="n">bank</span><span class="o">;</span>
-    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">Mailer</span> <span class="n">mailer</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">SupplyService</span> <span class="n">supply</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">BankService</span> <span class="n">bank</span><span class="o">;</span>
+    <span class="kd">public</span> <span class="kd">final</span> <span class="nc">MailerService</span> <span class="n">mailer</span><span class="o">;</span>
 
     <span class="kd">public</span> <span class="nf">Env</span><span class="o">(</span>
-        <span class="nc">StockService</span> <span class="n">stock</span><span class="o">,</span>
+        <span class="nc">SupplyService</span> <span class="n">supply</span><span class="o">,</span>
         <span class="nc">BankService</span> <span class="n">bank</span><span class="o">,</span>
         <span class="nc">MailService</span> <span class="n">mailer</span>
     <span class="o">)</span> <span class="o">{</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">stock</span> <span class="o">=</span> <span class="n">stock</span><span class="o">;</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">supply</span> <span class="o">=</span> <span class="n">supply</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">bank</span> <span class="o">=</span> <span class="n">bank</span><span class="o">;</span>
         <span class="k">this</span><span class="o">.</span><span class="na">mailer</span> <span class="o">=</span> <span class="n">mailer</span><span class="o">;</span>
     <span class="o">}</span>
@@ -135,7 +135,7 @@ container for all things we want to change when testing:</p>
 <figure class="highlight"><pre><code class="language-java" data-lang="java"><span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">acceptOrder</span><span class="o">(</span><span class="nc">Env</span> <span class="n">env</span><span class="o">,</span> <span class="nc">Customer</span> <span class="n">customer</span><span class="o">,</span> <span class="nc">List</span><span class="o">&lt;</span><span class="nc">OrderItem</span><span class="o">&gt;</span> <span class="n">items</span><span class="o">)</span> <span class="o">{</span>
     <span class="kt">var</span> <span class="n">totalCost</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span>
     <span class="k">for</span> <span class="o">(</span><span class="kt">var</span> <span class="n">item</span> <span class="o">:</span> <span class="n">items</span><span class="o">)</span> <span class="o">{</span>
-        <span class="n">env</span><span class="o">.</span><span class="na">stock</span><span class="o">.</span><span class="na">reduceSupply</span><span class="o">(</span><span class="n">env</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">amount</span><span class="o">);</span>
+        <span class="n">env</span><span class="o">.</span><span class="na">supply</span><span class="o">.</span><span class="na">reduce</span><span class="o">(</span><span class="n">env</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">id</span><span class="o">,</span> <span class="n">item</span><span class="o">.</span><span class="na">amount</span><span class="o">);</span>
         <span class="n">totalCost</span> <span class="o">+=</span> <span class="n">item</span><span class="o">.</span><span class="na">cost</span> <span class="o">*</span> <span class="n">item</span><span class="o">.</span><span class="na">amount</span><span class="o">;</span>
     <span class="o">}</span>
     <span class="n">env</span><span class="o">.</span><span class="na">bank</span><span class="o">.</span><span class="na">chargeMoney</span><span class="o">(</span><span class="n">env</span><span class="o">,</span> <span class="n">customer</span><span class="o">,</span> <span class="n">totalCost</span><span class="o">);</span>
@@ -145,8 +145,8 @@ container for all things we want to change when testing:</p>
 
 <p>Now we only had to construct objects for those services that we want to change
 when testing. In this small example it didn’t have much effect on the code size
-but in a large project it could remove a lot of useless objects. We could also put
-regular function references instead of service objects into the <code class="highlighter-rouge">Env</code> if we’d prefer.
+but in a large project it could remove a lot of useless objects. If we preferred to, we could also put
+regular function references in the <code class="highlighter-rouge">Env</code>, instead of service objects.
 Finally, we could also remove the <code class="highlighter-rouge">Env</code> entirely and pass around the services one by one, but
 this quickly leads to an unmaintainable mess.</p>
 
@@ -178,15 +178,28 @@ in Clojure.</p>
   </span><span class="p">(</span><span class="no">:require</span><span class="w"> </span><span class="p">[</span><span class="n">myproject.lib</span><span class="w"> </span><span class="no">:as</span><span class="w"> </span><span class="n">lib</span><span class="p">]))</span><span class="w">
 
 </span><span class="p">(</span><span class="k">defn</span><span class="w"> </span><span class="n">do-stuff</span><span class="w"> </span><span class="p">[</span><span class="n">x</span><span class="p">]</span><span class="w">
+  </span><span class="c1">; Do dangerous stuff</span><span class="w">
   </span><span class="p">(</span><span class="nf">lib/send-nukes</span><span class="p">)</span><span class="w">
+  </span><span class="c1">; Return a value</span><span class="w">
   </span><span class="n">x</span><span class="p">)</span><span class="w">
 
-</span><span class="c1">; Normal usage</span><span class="w">
-</span><span class="p">(</span><span class="nf">do-stuff</span><span class="w"> </span><span class="s">"hi"</span><span class="p">)</span><span class="w">
-</span><span class="c1">; Safe testing</span><span class="w">
+</span><span class="c1">; Normal usage, prints "This was bad. Really bad."</span><span class="w">
+</span><span class="p">(</span><span class="nf">do-stuff</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">
+</span><span class="c1">; Safe testing, prints "No problem"</span><span class="w">
 </span><span class="p">(</span><span class="nb">binding</span><span class="w"> </span><span class="p">[</span><span class="n">lib/send-nukes</span><span class="w"> </span><span class="p">(</span><span class="k">fn</span><span class="w"> </span><span class="p">[]</span><span class="w"> </span><span class="p">(</span><span class="nb">println</span><span class="w"> </span><span class="s">"No problem"</span><span class="p">))]</span><span class="w">
-  </span><span class="p">(</span><span class="nf">do-stuff</span><span class="w"> </span><span class="s">"hi"</span><span class="p">))</span></code></pre></figure>
+  </span><span class="p">(</span><span class="nf">do-stuff</span><span class="w"> </span><span class="mi">0</span><span class="p">))</span></code></pre></figure>
 
-<p>In my opinion this style of dependency injection is the simplest one. 
+<p>In my opinion this style of dependency injection is the simplest one<sup id="fnref:gotcha"><a href="#fn:gotcha" class="footnote">2</a></sup>. 
 It’s a shame that it isn’t available in more languages.</p>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:debatable">
+      <p>Debatable <a href="#fnref:debatable" class="reversefootnote">⤴</a></p>
+    </li>
+    <li id="fn:gotcha">
+      <p>Gotcha <a href="#fnref:gotcha" class="reversefootnote">⤴</a></p>
+    </li>
+  </ol>
+</div>
 :ET

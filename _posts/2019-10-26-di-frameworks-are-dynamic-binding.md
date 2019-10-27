@@ -32,11 +32,11 @@ is executing and see that `greeting` has been assigned the value `"Fuck off!"`.
 
 If dynamic scoping seems very weird to you, it likely is partly because you've never seen it before,
 and partly because it actually is very weird. Almost all modern programming languages are lexically
-scoped. Dynamic scoping makes it hard to figure what our program actually does, without executing it,
+scoped[^dynamic-languages]. Dynamic scoping makes it hard to figure what our program actually does, without executing it,
 and that's not a quality we want our programs to exhibit.
 
 Dynamic scoping might seem dubious at first glance, but I'm going to argue that one of the biggest
-advances in software engineering these past 20 years essentially boils down emulating dynamic scoping
+advances in software engineering these past 20 years[^debatable] essentially boils down emulating dynamic scoping
 in lexically scoped languages. I'm talking about dependency injection.
 
 ## Dependency injection
@@ -47,7 +47,7 @@ Consider the following piece of hypothetical code which handles an order in a we
 public static void acceptOrder(Customer customer, List<OrderItem> items) {
     var totalCost = 0;
     for (var item : items) {
-        Stock.reduceSupply(item.id, item.amount);
+        Supply.reduce(item.id, item.amount);
         totalCost += item.cost * item.amount;
     }
     Bank.chargeMoney(customer, totalCost);
@@ -65,16 +65,16 @@ introducing objects and accepting our dependencies in the constructor:
 {% highlight java %}
 public final class OrderService {
 
-    private final StockService stock;
+    private final SupplyService supply;
     private final BankService bank;
     private final MailService mailer;
 
     public OrderService(
-        StockService stock,
+        SupplyService supply,
         BankService bank,
         MailService mailer
     ) {
-        this.stock = stock;
+        this.supply = supply;
         this.bank = bank;
         this.mailer = mailer;
     }
@@ -82,7 +82,7 @@ public final class OrderService {
     public void acceptOrder(Customer customer, List<OrderItem> items) {
         var totalCost = 0;
         for (var item : items) {
-            stock.reduceSupply(item.id, item.amount);
+            supply.reduce(item.id, item.amount);
             totalCost += item.cost * item.amount;
         }
         bank.chargeMoney(customer, totalCost);
@@ -100,8 +100,8 @@ and dependency injection.
 
 Second, we can now pass in different implementations 
 of our dependencies when executing in test. This is very good, but let me rephrase
-that in more general terms: we can now look into the environment in which we are
-executing to determine the value of names. This should sound very familiar,
+that in more general terms: the value of certain names are now dependent on the environment
+in which we are executing. This should sound very familiar,
 dependency injection is just dynamic binding in disguise.
 
 ## Dependency injection is not trivial
@@ -123,16 +123,16 @@ container for all things we want to change when testing:
 
 {% highlight java %}
 public final class Env {
-    public final Stock stock;
-    public final Bank bank;
-    public final Mailer mailer;
+    public final SupplyService supply;
+    public final BankService bank;
+    public final MailerService mailer;
 
     public Env(
-        StockService stock,
+        SupplyService supply,
         BankService bank,
         MailService mailer
     ) {
-        this.stock = stock;
+        this.supply = supply;
         this.bank = bank;
         this.mailer = mailer;
     }
@@ -143,7 +143,7 @@ public final class Env {
 public static void acceptOrder(Env env, Customer customer, List<OrderItem> items) {
     var totalCost = 0;
     for (var item : items) {
-        env.stock.reduceSupply(env, item.id, item.amount);
+        env.supply.reduce(env, item.id, item.amount);
         totalCost += item.cost * item.amount;
     }
     env.bank.chargeMoney(env, customer, totalCost);
@@ -188,15 +188,28 @@ Then let's use it in two different ways:
   (:require [myproject.lib :as lib]))
 
 (defn do-stuff [x]
+  ; Do dangerous stuff
   (lib/send-nukes)
+  ; Return a value
   x)
 
-; Normal usage
-(do-stuff "hi")
-; Safe testing
+; Normal usage, prints "This was bad. Really bad."
+(do-stuff 0)
+; Safe testing, prints "No problem"
 (binding [lib/send-nukes (fn [] (println "No problem"))]
-  (do-stuff "hi"))
+  (do-stuff 0))
 {% endhighlight %}
 
-In my opinion this style of dependency injection is the simplest one. 
+In my opinion this style of dependency injection is the simplest one[^gotcha]. 
 It's a shame that it isn't available in more languages.
+
+[^dynamic-languages]:
+    Some examples of languages that use dynamic scoping by default are APL, Bash,
+    Latex and Emacs Lisp.
+
+[^debatable]:
+    Some will undoubtedly disagree with me about the importance of dependency injection.
+
+[^gotcha]: 
+    There is a minor gotcha with threading though. Before spawning a new thread
+    you have to wrap its main function using `bound-fn`, or else it will use the default bindings.

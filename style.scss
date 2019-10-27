@@ -287,3 +287,27 @@ footer {
 // ... Otherwise it really bloats up the top of the CSS file and makes it difficult to find the start
 @import "highlights";
 @import "svg-icons";
+
+.footnote {
+  content: '[' counter(footnotes) ']'; /* 1 */
+  vertical-align: super; /* 2 */
+  font-size: 0.6em; /* 3 */
+  margin-left: 2px; /* 4 */
+  text-decoration: underline; /* 5 */
+  cursor: pointer; /* 5 */
+  background-color: rgba(54, 118, 161, 0.2);
+  border-color: #3676a1;
+  color: #3676a1; 
+}
+
+.footnote:hover, .footnote:focus {
+  background-color: rgba(171, 51, 43, 0.2);
+  border-color: #ab332b;
+  color: #ab332b; 
+}
+
+.footnotes::before {
+  display: block;
+  font-weight: bold;
+  content: "Footnotes:";
+}

@@ -1,66 +1,4 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title>Dependency injection is dynamic scoping in disguise – Dynamic Stability – Thoughts about maintainable programming</title>
-
-        <meta charset="utf-8" />
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
-
-    
-    <meta name="description" content="Once upon time programming language researchers used to debate whether programming
-languages should be lexically or dynamically scoped. That might sound like gibberish to you
-but I think there’s an important lesson about modern software engineering
-to be learnt here, so allow me to explain.
-" />
-    <meta property="og:description" content="Once upon time programming language researchers used to debate whether programming
-languages should be lexically or dynamically scoped. That might sound like gibberish to you
-but I think there’s an important lesson about modern software engineering
-to be learnt here, so allow me to explain.
-" />
-    
-    <meta name="author" content="Dynamic Stability" />
-
-    
-    <meta property="og:title" content="Dependency injection is dynamic scoping in disguise" />
-    <meta property="twitter:title" content="Dependency injection is dynamic scoping in disguise" />
-    
-
-    <!--[if lt IE 9]>
-      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-
-    <link rel="stylesheet" type="text/css" href="/style.css" />
-    <link rel="alternate" type="application/rss+xml" title="Dynamic Stability - Thoughts about maintainable programming" href="/feed.xml" />
-
-    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
-  </head>
-
-  <body>
-    <div class="wrapper-masthead">
-      <div class="container">
-        <header class="masthead clearfix">
-          <a href="/" class="site-avatar"><img src="" /></a>
-
-          <div class="site-info">
-            <h1 class="site-name"><a href="/">Dynamic Stability</a></h1>
-            <p class="site-description">Thoughts about maintainable programming</p>
-          </div>
-
-          <nav>
-            <a href="/">Home</a>
-          </nav>
-        </header>
-      </div>
-    </div>
-
-    <div id="main" role="main" class="container">
-      <article class="post">
-  <h1>Dependency injection is dynamic scoping in disguise</h1>
-
-  <div class="entry">
-    <p>Once upon time programming language researchers used to debate whether programming
+I"T<p>Once upon time programming language researchers used to debate whether programming
 languages should be lexically or dynamically scoped. That might sound like gibberish to you
 but I think there’s an important lesson about modern software engineering
 to be learnt here, so allow me to explain.</p>
@@ -258,7 +196,7 @@ It’s a shame that it isn’t available in more languages.</p>
   <ol>
     <li id="fn:dynamic-languages">
 
-      <p>Some examples of languages that use dynamic scoping by default are APL, Bash,
+      <p>Examples of languages that use dynamic scoping by default include Bash,
 Latex and Emacs Lisp. <a href="#fnref:dynamic-languages" class="reversefootnote">⤴</a></p>
     </li>
     <li id="fn:debatable">
@@ -272,36 +210,4 @@ you have to wrap its main function using <code class="highlighter-rouge">bound-f
     </li>
   </ol>
 </div>
-
-  </div>
-
-  <div class="date">
-    Written on October 26, 2019
-  </div>
-
-</article>
-
-    </div>
-
-    <div class="wrapper-footer">
-      <div class="container">
-        <footer class="footer">
-          
-
-
-
-
-
-
-
-
-
-
-
-
-        </footer>
-      </div>
-    </div>
-
-  </body>
-</html>
+:ET
