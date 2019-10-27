@@ -200,8 +200,8 @@ Then let's use it in two different ways:
   (do-stuff 0))
 {% endhighlight %}
 Take note of how `send-nukes` is namespaced. This ensures that we only swap out the
-function we intended to, while others with the same name are left alone -- even if they
-too were defined as `^:dynamic`. This is what makes dynamic scoping sane.
+function we intend to, while others with the same name are left alone -- even if they
+too are defined as `^:dynamic`. This is what makes dynamic scoping sane.
 
 In my opinion this style of dependency injection is the simplest one[^gotcha]. 
 It's a shame that it isn't available in more languages.
