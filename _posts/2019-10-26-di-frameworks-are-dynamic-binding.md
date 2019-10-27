@@ -164,7 +164,7 @@ It should be even more obvious than with dependency injection that this is just 
 
 The problem with this style of programming is of course that we have to pass the `Env` around everywhere.
 However, some programming languages --like Haskell-- has syntactic sugar that lets us implicitly pass
-the `Env` around: this is called using a reader monad.
+the `Env` around: this is called using a reader monad[^rio].
 
 ## Explicit dynamic scoping
 Some lexically scoped programming languages, like Perl and most Lisps, allow us to explicitly
@@ -217,6 +217,10 @@ It's a shame that it isn't available in more languages.
     There are reasons other than testability for wanting to swap out one implementation
     for another. However, testability is the most common reason and the solutions are the
     same regardless of our reasons.
+
+[^rio]
+    The particular style where you're using a `Reader` to look up an environment containing IO performing
+    services is called the RIO monad pattern.
 
 [^redef]:
     Clojure also has `with-redefs` which lets you temporarily swap out lexically scoped functions.
