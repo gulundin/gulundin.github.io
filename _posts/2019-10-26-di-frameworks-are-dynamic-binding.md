@@ -9,7 +9,7 @@ to be learnt here, so allow me to explain.
 
 ## Scoping: lexical or dynamic?
 The question of lexical or dynamic scoping essentially boils down to this:
-what will `greet()` print?
+what should `greet()` print?
 {% highlight javascript %}
 const greeting = "Hello!";
 
@@ -56,7 +56,7 @@ public static void acceptOrder(Customer customer, List<OrderItem> items) {
 }
 {% endhighlight %}
 
-Our `acceptOrder` function above has some problems when it comes to testability.
+Our `acceptOrder` function above has some problems when it comes to testability[^testability].
 We simply cannot call it without incurring severe side effects on the outside world;
 charging money and sending mails are not stuff we want to do in test.
 
@@ -199,6 +199,9 @@ Then let's use it in two different ways:
 (binding [lib/send-nukes (fn [] (println "No problem"))]
   (do-stuff 0))
 {% endhighlight %}
+Take note of how `send-nukes` is namespaced. This ensures that we only swap out the
+function we intended to, while others with the same name are left alone -- even if they
+too were defined as `^:dynamic`. This is what makes dynamic scoping sane.
 
 In my opinion this style of dependency injection is the simplest one[^gotcha]. 
 It's a shame that it isn't available in more languages.
@@ -209,6 +212,11 @@ It's a shame that it isn't available in more languages.
 
 [^debatable]:
     Some will undoubtedly disagree with me about the importance of dependency injection.
+
+[^testability]:
+    There are reasons other than testability for wanting to swap out one implementation
+    for another. However, testability is the most common reason and the solutions are the
+    same regardless of the reason why you want to swap out an implementation.
 
 [^gotcha]: 
     There is a minor gotcha with threading though. Before spawning a new thread
