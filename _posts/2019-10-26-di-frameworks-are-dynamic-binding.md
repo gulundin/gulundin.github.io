@@ -100,7 +100,7 @@ and dependency injection.
 
 Second, we can now pass in different implementations 
 of our dependencies when executing in test[^testability]. This is very good, but let me rephrase
-that in more general terms: the value of certain names are now dependent on the environment
+that in more general terms: the values associated with certain names are now dependent on the environment
 in which we are executing. This should sound very familiar,
 dependency injection is just dynamic binding in disguise.
 
@@ -163,7 +163,7 @@ Here we are looking up names in an environment which we got passed to us by our 
 It should be even more obvious than with dependency injection that this is just dynamic scoping in disguise.
 
 The problem with this style of programming is of course that we have to pass the `Env` around everywhere.
-However, some programming languages --like Haskell-- has syntactic sugar that lets us implicitly pass
+However, some programming languages --like Haskell-- have syntactic sugar that lets us implicitly pass
 the `Env` around: this is called using a reader monad[^rio].
 
 ## Explicit dynamic scoping
@@ -201,7 +201,7 @@ Then let's use it in two different ways:
 {% endhighlight %}
 Take note of how `send-nukes` is namespaced. This ensures that we only swap out the
 function we intend to, while others with the same name are left alone -- even if they
-too are defined as `^:dynamic`. This is what makes dynamic scoping sane.
+too are defined as `^:dynamic`. Namespaces make dynamic scoping behave in a sane way.
 
 In my opinion this style of dependency injection is the simplest one[^gotcha]. 
 It's a shame that it isn't available in more languages.
