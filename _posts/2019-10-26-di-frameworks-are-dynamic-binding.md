@@ -169,7 +169,7 @@ the `Env` around: this is called using a reader monad[^rio].
 ## Explicit dynamic scoping
 Some lexically scoped programming languages, like Perl and most Lisps, allow us to explicitly
 declare that a certain name should be dynamically scoped. Let's explore how that would be done
-in Clojure[^redef].
+in Clojure[^gotcha][^redef].
 
 First let's define a dangerous function that we don't want called in test:
 {% highlight clojure %}
@@ -203,8 +203,8 @@ Take note of how `send-nukes` is namespaced. This ensures that we only swap out 
 function we intend to, while others with the same name are left alone -- even if they
 too are defined as `^:dynamic`. Namespaces make dynamic scoping behave in a sane way.
 
-In my opinion this style of dependency injection is the simplest one[^gotcha]. 
-It's a shame that it isn't available in more languages.
+Selective dynamic scoping allows us to do exactly what we want: write testable code, without incurring any 
+test induced design damage[^dhh]. It's a shame that this feature it isn't available in more languages.
 
 [^dynamic-languages]:
     Some examples of languages that use dynamic scoping by default are APL, Bash,
@@ -225,6 +225,10 @@ It's a shame that it isn't available in more languages.
 [^redef]:
     Clojure also has `with-redefs` which lets you temporarily swap out lexically scoped functions.
     However, this is not thread-safe.
+
+[^dhh]:
+    [Test induced design damage](https://dhh.dk/2014/test-induced-design-damage.html), a very interesting
+    rant by the creator of Rails.
 
 [^gotcha]: 
     There is a minor gotcha with threading though. Before spawning a new thread
