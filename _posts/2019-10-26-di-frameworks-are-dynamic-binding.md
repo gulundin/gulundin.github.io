@@ -2,7 +2,7 @@
 layout: post
 title: Dependency injection is dynamic scoping in disguise
 ---
-Once upon a time programmer used to debate whether programming
+Once upon a time programmers used to debate whether programming
 languages should be lexically or dynamically scoped. That might sound like gibberish to you
 but I think there's an important lesson about modern software engineering
 to be learnt here, so allow me to explain.
