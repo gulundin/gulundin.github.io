@@ -203,8 +203,8 @@ Take note of how `send-nukes` is namespaced. This ensures that we only swap out 
 function we intend to, while others with the same name are left alone -- even if they
 too are defined as `^:dynamic`. Namespaces make dynamic scoping behave in a sane way.
 
-Selective dynamic scoping allows us to do exactly what we want: write testable code, without incurring any 
-test induced design damage[^dhh]. It's a shame that this feature it isn't available in more languages.
+Selective dynamic scoping allows us to do exactly what we want: write testable code without harming
+our design[^dhh]. It's a shame that this feature it isn't available in more languages.
 
 [^dynamic-languages]:
     Some examples of languages that use dynamic scoping by default are APL, Bash,
