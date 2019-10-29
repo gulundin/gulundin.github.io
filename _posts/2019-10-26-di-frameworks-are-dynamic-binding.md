@@ -2,7 +2,7 @@
 layout: post
 title: Dependency injection is dynamic scoping in disguise
 ---
-Once upon time programmer used to debate whether programming
+Once upon a time programmer used to debate whether programming
 languages should be lexically or dynamically scoped. That might sound like gibberish to you
 but I think there's an important lesson about modern software engineering
 to be learnt here, so allow me to explain.
@@ -102,7 +102,9 @@ Second, we can now pass in different implementations
 of our dependencies when executing in test[^testability]. This is very good, but let me rephrase
 that in more general terms: the values associated with certain names are now dependent on the environment
 in which we are executing. This should sound very familiar,
-dependency injection is just dynamic binding in disguise.
+dependency injection is just a more controlled form of dynamic scoping. Later
+on we shall explore other ways of taming dynamic scoping, ways that don't make you
+jump though all the hoops that dependency injection do.
 
 ## Dependency injection is not trivial
 The problem with objects is that they have to be constructed somewhere. To
@@ -182,10 +184,19 @@ First let's define a dangerous function that we don't want called in test:
   (println "This was bad. Really bad."))
 {% endhighlight %}
 
-Then let's use it in two different ways:
+Then let's define a test double:
+{% highlight clojure %}
+(ns myproject.fakes)
+
+(defn send-nukes-test-double []
+  (println "No problem"))
+{% endhighlight %}
+
+Finally, let's use the function:
 {% highlight clojure %}
 (ns myproject.core
-  (:require [myproject.lib :as lib]))
+  (:require [myproject.lib :as lib]
+            [myproject.fakes :as fakes]))
 
 (defn do-stuff [x]
   ; Do dangerous stuff
@@ -196,7 +207,7 @@ Then let's use it in two different ways:
 ; Normal usage, prints "This was bad. Really bad."
 (do-stuff 0)
 ; Safe testing, prints "No problem"
-(binding [lib/send-nukes (fn [] (println "No problem"))]
+(binding [lib/send-nukes fakes/send-nukes-test-double]
   (do-stuff 0))
 {% endhighlight %}
 Take note of how `send-nukes` is namespaced. This ensures that we only swap out the
