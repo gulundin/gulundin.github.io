@@ -165,8 +165,8 @@ Here we are looking up names in an environment which we got passed to us by our 
 It should be even more obvious than with dependency injection that this is just dynamic scoping in disguise.
 
 The problem with this style of programming is of course that we have to pass the `Env` around everywhere.
-However, some programming languages --like Haskell-- have syntactic sugar that lets us implicitly pass
-the `Env` around: this is called using a reader monad[^rio].
+There is a way of implicitly passing around the `Env` using higher order functions that's called a Reader monad,
+however, that is even more unwieldy without special syntactic sugar that's available in some languages like Haskell.
 
 ## Explicit dynamic scoping
 Some lexically scoped programming languages, like Perl and most Lisps, allow us to explicitly
