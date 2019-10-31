@@ -167,8 +167,9 @@ However, this can be tamed by having each module declare its own `Env` interface
 The real problem with this style of programming is that we have to pass the `Env` around everywhere.
 
 ## Reader monads
-There is a way of implicitly passing around an environment of dependencies that's
-called using a reader monad. Here is an example demonstrating its use in Haskell:
+The reader monad is a technique that let's us implicitly pass around an extra argument to
+every function that declares that it returns a value of type `ReaderT`. This seems like a great
+compliment to the `Env` passing style, let's see how it can be used in Haskell:
 
 {% highlight haskell %}
 import Control.Monad.Reader
@@ -218,7 +219,7 @@ By using a reader monad we avoid having to pass the `Env` around, however,
 the price we pay is having to use monad transformers. Honestly,
 reader monads do have a lot of nice properties, but I don't think they are worth
 the inevitable fight with the type checker. I only have around 6 months of full time experience
-with Haskell and I fully expect that this would turn into a non-problem after a few years more.
+with Haskell and I fully expect that this would turn into a non-problem after a few years.
 But do I want to put in that time? Can I get my friends and co-workers to put in that time?
 
 ## Explicit dynamic scoping
