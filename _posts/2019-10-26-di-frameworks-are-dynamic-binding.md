@@ -168,7 +168,7 @@ The real problem with this style of programming is that we have to pass the `Env
 
 ## Reader monads
 There is a way of implicitly passing around an environment of dependencies that's
-called using a reader monad. Here follows an example of how to use it in Haskell:
+called using a reader monad. Here is an example demonstrating its use in Haskell:
 
 {% highlight haskell %}
 import Control.Monad.Reader
@@ -214,12 +214,12 @@ main = do
     runReaderT (doMoreStuff "In test: ") testEnv
 {% endhighlight %}
 
-By using reader monads we have avoided having to pass around the `Env` explicitly,
-however, this came at the price of having to use monad transformers. Honestly,
-the reader monad solution does have a lot of nice properties, but I don't think they are worth
-having to struggle to get my code to compile. I only have around 6 months of full time experience
+By using a reader monad we avoid having to pass the `Env` around, however,
+the price we pay is having to use monad transformers. Honestly,
+reader monads do have a lot of nice properties, but I don't think they are worth
+the inevitable fight with the type checker. I only have around 6 months of full time experience
 with Haskell and I fully expect that this would turn into a non-problem after a few years more.
-But do I want to put in that time? Can I get my friends to put in that time?
+But do I want to put in that time? Can I get my friends and co-workers to put in that time?
 
 ## Explicit dynamic scoping
 Some lexically scoped programming languages, like Perl and most Lisps, allow us to explicitly
