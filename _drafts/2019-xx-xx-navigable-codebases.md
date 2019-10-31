@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Navigable codebases
+title: Navigable codebases and dynamic typing
 ---
 
 Lorem ipsum

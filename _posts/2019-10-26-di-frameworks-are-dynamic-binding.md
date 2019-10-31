@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Dynamic binding is the simplest form of dependency injection
+title: Dynamic scoping is the simplest form of dependency injection
 ---
 Once upon a time programmers used to debate whether programming
 languages should be lexically or dynamically scoped. That might sound like gibberish to you
