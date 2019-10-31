@@ -1,6 +1,6 @@
 ---
 layout: post
-title: Dependency injection is dynamic scoping in disguise
+title: Dynamic binding is the simplest form of dependency injection
 ---
 Once upon a time programmers used to debate whether programming
 languages should be lexically or dynamically scoped. That might sound like gibberish to you
@@ -35,11 +35,11 @@ and partly because it actually is very weird. Almost all modern programming lang
 scoped[^dynamic-languages]. Dynamic scoping makes it hard to figure what our program actually does, without executing it,
 and that's not a quality we want our programs to exhibit.
 
-Dynamic scoping might seem dubious at first glance, but I'm going to argue that one of the biggest
-advances in software engineering these past 20 years[^debatable] essentially boils down emulating dynamic scoping
-in lexically scoped languages. I'm talking about dependency injection.
+Dynamic scoping might seem dubious at first glance, but I'm going to argue that
+it can be tamed, and that it can then can be used to accomplish dependency injection
+with fewer drawbacks than other methods. First, let's survey those other methods.
 
-## Dependency injection
+## Dependency injection via objects
 Let's switch example language to java.
 
 Consider the following piece of hypothetical code which handles an order in a web shop:
@@ -95,18 +95,14 @@ public final class OrderService {
 Now two things have happened. 
 
 First of all, our code got much longer. However, 
-this is mostly Java's fault and not something inherently wrong with objects 
-and dependency injection. 
+this is mostly Java's fault and not something inherently wrong with objects. 
 
 Second, we can now pass in different implementations 
 of our dependencies when executing in test[^testability]. This is very good, but let me rephrase
 that in more general terms: the values associated with certain names are now dependent on the environment
-in which we are executing. This should sound very familiar,
-dependency injection is just a more controlled form of dynamic scoping. Later
-on we shall explore other ways of taming dynamic scoping, ways that don't make you
-jump though all the hoops that dependency injection do.
+in which we are executing. This should sound very familiar.
 
-## Dependency injection is not trivial
+## Object construction is hard
 The problem with objects is that they have to be constructed somewhere. To
 build an `OrderService` we also need to build a `SupplyService`, and whatever
 that `SupplyService` depend upon and so forth. This can easily turn into a huge
@@ -119,7 +115,7 @@ but it still leads to lots of brain dead code that we'd rather not write. In pra
 organizations end up forgoing their factories in favor of more dynamic dependency
 injection frameworks that construct objects using reflection, like Spring or Guice.
 
-## Reader monads
+## Env passing
 One alternative way to solve the testability problem would be to introduce a 
 container for all things we want to change when testing:
 
@@ -162,11 +158,68 @@ Finally, we could also remove the `Env` entirely and pass around the services on
 this quickly leads to an unmaintainable mess.
 
 Here we are looking up names in an environment which we got passed to us by our caller.
-It should be even more obvious than with dependency injection that this is just dynamic scoping in disguise.
+This again should sound very familiar.
 
-The problem with this style of programming is of course that we have to pass the `Env` around everywhere.
-There is a way of implicitly passing around the `Env` using higher order functions that's called a Reader monad,
-however, that is even more unwieldy without special syntactic sugar that's available in some languages like Haskell.
+You might think that this results in an entangled mess where every module depend upon every other module.
+However, this can be tamed by having each module declare its own `Env` interface and having the real
+`Env` implement them all.
+
+The real problem with this style of programming is that we have to pass the `Env` around everywhere.
+
+## Reader monads
+There is a way of implicitly passing around an environment of dependencies that's
+called using a reader monad. Here follows an example of how to use it in Haskell:
+
+{% highlight haskell %}
+import Control.Monad.Reader
+
+-- The Env holds the services we want to replace
+data Env = Env { sendNukes :: IO () }
+
+-- Set up a service we don't want called in test
+sendNukesProd :: IO ()
+sendNukesProd = do putStr "Very Bad"
+
+-- And a test double for it
+sendNukesTest :: IO ()
+sendNukesTest = do putStr "No problem"
+
+-- Uses our replaceable dependency to do stuff
+doStuff :: String -> ReaderT Env IO ()
+doStuff someVal = do
+    -- First do some stuff on our own
+    liftIO $ putStr someVal
+    -- Looks up the implicit env
+    env <- ask
+    -- Extract and use the particular service we're looking for
+    liftIO $ sendNukes env
+
+doMoreStuff :: String -> ReaderT Env IO ()
+doMoreStuff someVal = do
+    -- Now we don't have to pass the env along when making use of doStuff,
+    -- but it still appears in our type signature.
+    liftIO $ putStr "("
+    doStuff someVal
+    liftIO $ putStrLn ")"
+
+main :: IO ()
+main = do
+    -- At the top level we do have to supply the actual env
+    let prodEnv = Env sendNukesProd
+    -- prints "(In prod: Very bad)"
+    runReaderT (doMoreStuff "In prod: ") prodEnv
+
+    let testEnv = Env sendNukesTest
+    -- prints "(In Test: No problem)"
+    runReaderT (doMoreStuff "In test: ") testEnv
+{% endhighlight %}
+
+By using reader monads we have avoided having to pass around the `Env` explicitly,
+however, this came at the price of having to use monad transformers. Honestly,
+the reader monad solution does have a lot of nice properties, but I don't think they are worth
+having to struggle to get my code to compile. I only have around 6 months of full time experience
+with Haskell and I fully expect that this would turn into a non-problem after a few years more.
+But do I want to put in that time? Can I get my friends to put in that time?
 
 ## Explicit dynamic scoping
 Some lexically scoped programming languages, like Perl and most Lisps, allow us to explicitly
@@ -212,26 +265,26 @@ Finally, let's use the function:
 {% endhighlight %}
 Take note of how `send-nukes` is namespaced. This ensures that we only swap out the
 function we intend to, while others with the same name are left alone -- even if they
-too are defined as `^:dynamic`. Namespaces make dynamic scoping behave in a sane way.
+too are defined as `^:dynamic`. Namespaces are the magic sauce that make dynamic scoping behave in a sane way.
 
 Selective dynamic scoping allows us to do exactly what we want: write testable code without harming
 our design[^dhh]. It's a shame that this feature it isn't available in more languages.
 
-[^dynamic-languages]:
-    Some examples of languages that use dynamic scoping by default are APL, Bash,
-    Latex and Emacs Lisp.
+## Discussion
+[Hacker news](https://news.ycombinator.com/item?id=21405962)
 
-[^debatable]:
-    Some will undoubtedly disagree with me about the importance of dependency injection.
+[^dynamic-languages]:
+    Some examples of languages that use dynamic scoping by default are APL,
+    Latex and Emacs Lisp.
 
 [^testability]:
     There are reasons other than testability for wanting to swap out one implementation
     for another. However, testability is the most common reason and the solutions are the
     same regardless of our reasons.
 
-[^rio]:
-    The particular style where you're using a `Reader` to look up an environment containing IO performing
-    services is called the RIO monad pattern.
+[^gotcha]: 
+    There is a minor gotcha with threading though. Before spawning a new thread
+    you have to wrap its main function using `bound-fn`, or else it will use the default bindings.
 
 [^redef]:
     Clojure also has `with-redefs` which lets you temporarily swap out lexically scoped functions.
@@ -240,7 +293,3 @@ our design[^dhh]. It's a shame that this feature it isn't available in more lang
 [^dhh]:
     [Test induced design damage](https://dhh.dk/2014/test-induced-design-damage.html), a very interesting
     rant by the creator of Rails.
-
-[^gotcha]: 
-    There is a minor gotcha with threading though. Before spawning a new thread
-    you have to wrap its main function using `bound-fn`, or else it will use the default bindings.
